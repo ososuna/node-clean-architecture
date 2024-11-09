@@ -18,6 +18,11 @@ export class Server {
   }
 
   async start() {
+
+    // middlewares
+    this.app.use(express.json());
+    // this.app.use(express.urlencoded({ extended: true })); // x-www-formurlencoder
+
     this.app.use(this.routes);
 
     this.app.listen(this.port, () => {
