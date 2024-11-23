@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { AuthRepository, CustomError, RegisterUser, RegisterUserDto } from '../../domain';
+import { AuthRepository, CustomError, LoginUserDto, LoginUser, RegisterUser, RegisterUserDto } from '../../domain';
 import { UserModel } from '../../data/mongodb';
 
 export class AuthController {
@@ -23,6 +23,7 @@ export class AuthController {
       res.status(400).json({ error });
       return;
     }
+    // create use case instance
     new RegisterUser(this.authRepository)
       .execute(registerUserDto!)
       .then( data => res.json(data) )
@@ -30,7 +31,16 @@ export class AuthController {
   }
 
   loginUser = (req: Request, res: Response) => {
-    res.json('loginUser controller');
+    const [error, loginUserDto] = LoginUserDto.create(req.body);
+    if (error) {
+      res.status(400).json({ error });
+      return;
+    }
+    // create use case instance
+    new LoginUser(this.authRepository)
+      .execute(loginUserDto!)
+      .then( data => res.json(data) )
+      .catch( error => this.handleError(error, res) )
   }
 
   getUsers = (req: Request, res: Response) => {

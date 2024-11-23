@@ -1,5 +1,5 @@
 import { UserModel } from '../../data/mongodb';
-import { AuthDataSource, CustomError, RegisterUserDto, User } from '../../domain';
+import { AuthDataSource, CustomError, RegisterUserDto, LoginUserDto, User } from '../../domain';
 import { BcryptAdapter } from '../../config';
 import { UserMapper } from '../mappers/user.mapper';
 
@@ -28,6 +28,26 @@ export class AuthDataSourceImpl implements AuthDataSource {
 
       await user.save();
       return UserMapper.userEntityFromObject(user);
+
+    } catch (error) {
+      if (error instanceof CustomError) {
+        throw error;
+      }
+      throw CustomError.internalServer();
+    }
+  }
+
+  async login(loginUserDto: LoginUserDto): Promise<User> {
+    const { email, password } = loginUserDto;
+
+    try {
+      const existingUser = await UserModel.findOne({ email });
+      if ( !existingUser ) throw CustomError.badRequest('bad credentials');
+
+      const isValidPassword = this.comparePassword(password, existingUser.password);
+      if ( !isValidPassword ) throw CustomError.badRequest('bad credentials');
+
+      return UserMapper.userEntityFromObject(existingUser);
 
     } catch (error) {
       if (error instanceof CustomError) {

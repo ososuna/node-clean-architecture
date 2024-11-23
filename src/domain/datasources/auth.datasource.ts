@@ -1,4 +1,4 @@
-import { RegisterUserDto } from '../dtos/auth/register-user.dto';
+import { LoginUserDto, RegisterUserDto } from '../index';
 import { User } from '../entities/user.entity';
 
 /**
@@ -8,6 +8,6 @@ import { User } from '../entities/user.entity';
 * Each data source must has a login and register method
 */
 export interface AuthDataSource {
-  // abstract login(loginUserDto: LoginUserDto): Promise<User>
+  login(loginUserDto: LoginUserDto): Promise<User>
   register(registerUserDto: RegisterUserDto): Promise<User>
 }
