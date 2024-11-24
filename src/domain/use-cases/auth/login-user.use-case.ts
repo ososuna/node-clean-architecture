@@ -3,6 +3,7 @@ import { LoginUserDto } from '../../dtos/auth/login-user.dto';
 import { CustomError } from '../../errors/custom.error';
 import { AuthRepository } from '../../repositories/auth.repository';
 
+// can create a sep file of interfaces in domain
 interface UserToken {
   token: string;
   user: {
@@ -26,6 +27,7 @@ export class LoginUser implements LoginUserUseCase {
   ) {}
 
   async execute(loginUserDto: LoginUserDto): Promise<UserToken> {
+
     const user = await this.authRepository.login(loginUserDto);
     const token = await this.signToken({ id: user.id }, '2h');
 

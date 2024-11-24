@@ -1,4 +1,4 @@
-import { LoginUserDto, RegisterUserDto } from '../index';
+import { LoginUserDto, RegisterUserDto } from '..';
 import { User } from '../entities/user.entity';
 
 /**

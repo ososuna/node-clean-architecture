@@ -41,13 +41,13 @@ export class AuthDataSourceImpl implements AuthDataSource {
     const { email, password } = loginUserDto;
 
     try {
-      const existingUser = await UserModel.findOne({ email });
-      if ( !existingUser ) throw CustomError.badRequest('bad credentials');
+      const user = await UserModel.findOne({ email });
+      if ( !user ) throw CustomError.badRequest('bad credentials');
 
-      const isValidPassword = this.comparePassword(password, existingUser.password);
+      const isValidPassword = this.comparePassword(password, user.password);
       if ( !isValidPassword ) throw CustomError.badRequest('bad credentials');
 
-      return UserMapper.userEntityFromObject(existingUser);
+      return UserMapper.userEntityFromObject(user);
 
     } catch (error) {
       if (error instanceof CustomError) {
